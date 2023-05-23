@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>
+        广义估计方程简介 - KAI&#39;s Blog
+      </title>
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  
+  <meta name="theme-color" content="#000000" />
+  
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <meta name="description" content="本文总结了广义估计方程中的参数估计，并推导了用于求解模型的Gauss—Newton迭代法。此外，针对每个内容，本文还给出了相应的R软件求解算" />
+  <meta name="generator" content="Hugo 0.89.4 with theme pure" />
+  <title>广义估计方程简介 - KAI&#39;s Blog</title>
+  
+  
+  <link rel="stylesheet" href="https://jiandan94.github.io/blog/css/style.min.6d6a00921260ae2b9767148e83dbcf7fd326a53c5ab9c07f7a870d320865cc9b.css">
+  
+  <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css" async>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css" async>
+  <meta property="og:title" content="广义估计方程简介" />
+<meta property="og:description" content="本文总结了广义估计方程中的参数估计，并推导了用于求解模型的Gauss—Newton迭代法。此外，针对每个内容，本文还给出了相应的R软件求解算" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://jiandan94.github.io/blog/2018/06/gee/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2018-06-22T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-06-22T00:00:00+00:00" />
+
+<meta itemprop="name" content="广义估计方程简介">
+<meta itemprop="description" content="本文总结了广义估计方程中的参数估计，并推导了用于求解模型的Gauss—Newton迭代法。此外，针对每个内容，本文还给出了相应的R软件求解算"><meta itemprop="datePublished" content="2018-06-22T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2018-06-22T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1689">
+<meta itemprop="keywords" content="多元统计,纵向数据分析," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="广义估计方程简介"/>
+<meta name="twitter:description" content="本文总结了广义估计方程中的参数估计，并推导了用于求解模型的Gauss—Newton迭代法。此外，针对每个内容，本文还给出了相应的R软件求解算"/>
+
+  <!--[if lte IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+    <![endif]-->
+
+  <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+  </head>
+
+  
+  
+
+  <body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage"><header class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <div class="slimContent">
+      <div class="navbar-header">
+        <div class="profile-block text-center">
+          <a id="avatar" href="" target="_blank">
+            <img class="img-circle img-rotate" src="https://jiandan94.github.io/blog/qk.jpg" width="200" height="200">
+          </a>
+          <h2 id="name" class="hidden-xs hidden-sm">齐 凯</h2>
+          <h3 id="title" class="hidden-xs hidden-sm hidden-md">统计学在读博士</h3>
+          <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i>重庆, 中国</small>
+        </div><div class="search" id="search-form-wrap">
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i
+                        class="icon icon-search"></i></button>
+            </span>
+        </div>
+        <div class="ins-search">
+            <div class="ins-search-mask"></div>
+            <div class="ins-search-container">
+                <div class="ins-input-wrapper">
+                    <input type="text" class="ins-search-input" placeholder="想要查找什么..."
+                        x-webkit-speech />
+                    <button type="button" class="close ins-close ins-selectable" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="ins-section-wrapper">
+                    <div class="ins-section-container"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+        <ul class="nav navbar-nav main-nav">
+            <li class="menu-item menu-item-home">
+                <a href="/blog/">
+                    <i class="icon icon-home-fill"></i>
+                  <span class="menu-title">主页</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-archives">
+                <a href="posts/">
+                    <i class="icon icon-archives-fill"></i>
+                  <span class="menu-title">归档</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-categories">
+                <a href="categories/">
+                    <i class="icon icon-folder"></i>
+                  <span class="menu-title">分类</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-tags">
+                <a href="tags/">
+                    <i class="icon icon-tags"></i>
+                  <span class="menu-title">标签</span>
+                </a>
+            </li>
+            <li class="menu-item menu-item-about">
+                <a href="https://www.qikai.site">
+                    <i class="icon icon-cup-fill"></i>
+                  <span class="menu-title">关于</span>
+                </a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+<aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content"><p>欢迎来到我的博客!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+      
+<div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+        <ul class="recent-post-list list-unstyled no-thumbnail">
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://jiandan94.github.io/blog/2022/09/scad/" class="title">非凸惩罚之SCAD简介</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2022-09-01 00:00:00 &#43;0000 UTC" itemprop="datePublished">2022-09-01</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://jiandan94.github.io/blog/2022/08/svm-with-non-convex-penalization/" class="title">高维情形下非凸惩罚SVM的参数一致性</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2022-08-28 00:00:00 &#43;0000 UTC" itemprop="datePublished">2022-08-28</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://jiandan94.github.io/blog/2022/06/am-algorithm-and-its-convergence-analysis/" class="title">交替最小化：凸优化下的收敛性分析</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2022-06-25 00:00:00 &#43;0000 UTC" itemprop="datePublished">2022-06-25</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://jiandan94.github.io/blog/2021/10/irrepresentable-condition/" class="title">LASSO的变量选择一致性之不可表示性条件</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2021-10-10 00:00:00 &#43;0000 UTC" itemprop="datePublished">2021-10-10</time>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="item-inner">
+                    <p class="item-title">
+                        <a href="https://jiandan94.github.io/blog/2021/09/zq2021/" class="title">中秋</a>
+                    </p>
+                    <p class="item-date">
+                        <time datetime="2021-09-21 00:00:00 &#43;0000 UTC" itemprop="datePublished">2021-09-21</time>
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+      <div class="widget">
+    <h3 class="widget-title"> 分类</h3>
+    <div class="widget-body">
+        <ul class="category-list">
+            <li class="category-list-item"><a href="https://jiandan94.github.io/blog/categories/linux/" class="category-list-link">linux</a><span class="category-list-count">5</span></li>
+            <li class="category-list-item"><a href="https://jiandan94.github.io/blog/categories/r%E8%AF%AD%E8%A8%80/" class="category-list-link">r语言</a><span class="category-list-count">9</span></li>
+            <li class="category-list-item"><a href="https://jiandan94.github.io/blog/categories/%E5%AD%A6%E6%9C%AF%E6%9D%82%E8%B0%88/" class="category-list-link">学术杂谈</a><span class="category-list-count">2</span></li>
+            <li class="category-list-item"><a href="https://jiandan94.github.io/blog/categories/%E7%AC%94%E8%AE%B0/" class="category-list-link">笔记</a><span class="category-list-count">19</span></li>
+            <li class="category-list-item"><a href="https://jiandan94.github.io/blog/categories/%E8%AF%97%E8%AF%8D%E6%AD%8C%E8%B5%8B/" class="category-list-link">诗词歌赋</a><span class="category-list-count">18</span></li>
+        </ul>
+    </div>
+</div>
+      <div class="widget">
+    <h3 class="widget-title"> 标签</h3>
+    <div class="widget-body">
+        <ul class="tag-list">
+            
+            
+            <li class="tag-list-item"><a href="https://jiandan94.github.io/blog/tags/git/" class="tag-list-link">git</a><span
+                    class="tag-list-count">5</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://jiandan94.github.io/blog/tags/r%E8%AF%AD%E8%A8%80/" class="tag-list-link">r语言</a><span
+                    class="tag-list-count">8</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://jiandan94.github.io/blog/tags/%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/" class="tag-list-link">优化算法</a><span
+                    class="tag-list-count">4</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://jiandan94.github.io/blog/tags/%E5%87%B8%E4%BC%98%E5%8C%96/" class="tag-list-link">凸优化</a><span
+                    class="tag-list-count">3</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://jiandan94.github.io/blog/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/" class="tag-list-link">分类算法</a><span
+                    class="tag-list-count">1</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://jiandan94.github.io/blog/tags/%E5%8F%98%E9%87%8F%E9%80%89%E6%8B%A9/" class="tag-list-link">变量选择</a><span
+                    class="tag-list-count">4</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://jiandan94.github.io/blog/tags/%E5%9B%9E%E5%BD%92%E5%88%86%E6%9E%90/" class="tag-list-link">回归分析</a><span
+                    class="tag-list-count">6</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://jiandan94.github.io/blog/tags/%E5%A4%9A%E5%85%83%E7%BB%9F%E8%AE%A1/" class="tag-list-link">多元统计</a><span
+                    class="tag-list-count">11</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://jiandan94.github.io/blog/tags/%E6%95%B0%E5%AD%A6%E5%8F%B2/" class="tag-list-link">数学史</a><span
+                    class="tag-list-count">2</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://jiandan94.github.io/blog/tags/%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96/" class="tag-list-link">数据可视化</a><span
+                    class="tag-list-count">3</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://jiandan94.github.io/blog/tags/%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90/" class="tag-list-link">文本分析</a><span
+                    class="tag-list-count">1</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://jiandan94.github.io/blog/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" class="tag-list-link">机器学习</a><span
+                    class="tag-list-count">9</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://jiandan94.github.io/blog/tags/%E7%AE%97%E6%B3%95/" class="tag-list-link">算法</a><span
+                    class="tag-list-count">6</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://jiandan94.github.io/blog/tags/%E7%BA%B5%E5%90%91%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/" class="tag-list-link">纵向数据分析</a><span
+                    class="tag-list-count">1</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://jiandan94.github.io/blog/tags/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95%E7%90%86%E8%AE%BA/" class="tag-list-link">经典算法理论</a><span
+                    class="tag-list-count">1</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://jiandan94.github.io/blog/tags/%E8%99%8E%E6%BA%AA%E5%B2%81%E6%9C%88/" class="tag-list-link">虎溪岁月</a><span
+                    class="tag-list-count">17</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://jiandan94.github.io/blog/tags/%E8%AF%97%E6%96%87/" class="tag-list-link">诗文</a><span
+                    class="tag-list-count">18</span></li>
+            
+            
+            <li class="tag-list-item"><a href="https://jiandan94.github.io/blog/tags/%E9%AB%98%E7%BB%B4%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/" class="tag-list-link">高维数据分析</a><span
+                    class="tag-list-count">4</span></li>
+            
+        </ul>
+
+    </div>
+</div>
+  </div>
+</aside>
+
+    
+    
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <h4 class="toc-title">文章目录</h4>
+    <nav id="toc" class="js-toc toc">
+
+    </nav>
+  </div>
+</aside>
+<main class="main" role="main"><div class="content">
+  <article id="-" class="article article-type-" itemscope
+    itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      <h1 itemprop="name">
+  <a
+    class="article-title"
+    href="/blog/2018/06/gee/"
+    >广义估计方程简介</a
+  >
+</h1>
+
+      <div class="article-meta">
+        
+<span class="article-date">
+  <i class="icon icon-calendar-check"></i>&nbsp;
+<a href="https://jiandan94.github.io/blog/2018/06/gee/" class="article-date">
+  <time datetime="2018-06-22 00:00:00 &#43;0000 UTC" itemprop="datePublished">2018-06-22</time>
+</a>
+</span>
+<span class="article-category">
+  <i class="icon icon-folder"></i>&nbsp;
+  <a class="article-category-link" href="/blog/categories/%E7%AC%94%E8%AE%B0/"> 笔记 </a>
+</span>  
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>&nbsp;
+    <a class="article-tag-link" href="/blog/tags/%E5%A4%9A%E5%85%83%E7%BB%9F%E8%AE%A1/"> 多元统计 </a>
+    <a class="article-tag-link" href="/blog/tags/%E7%BA%B5%E5%90%91%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/"> 纵向数据分析 </a>
+  </span>
+
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+        <span class="post-comment"><i class="icon icon-comment"></i>&nbsp;<a href="/blog/2018/06/gee/#comments"
+            class="article-comment-link">评论</a></span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1689字</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 4分 </span>
+      </div>
+    </div>
+    <div class="article-entry marked-body js-toc-content" itemprop="articleBody">
+      <p>本文总结了广义估计方程中的参数估计，并推导了用于求解模型的Gauss—Newton迭代法。此外，针对每个内容，本文还给出了相应的<code>R</code>软件求解算法，并做了相应的模拟。</p>
+<h2 id="1-广义估计方程">1 广义估计方程</h2>
+<p>假定观测数据中有 $y _1,\cdots ,y _n$ 个体，对于个体 $y _i$ 有 $y _{i1},\cdots,y _{im}$ 个观测。其中对于 $y _1,\cdots ,y _n$ 个体之间是相互独立的，而每个个体内的观测 $y _{i1},\cdots ,y _{im}$ 则是具有相关性的。对于观测 $y _{ij}$ 对应有 $\eta _{ij}$，满足 $\eta _{ij} = x _{ij _1} \beta _1+\cdots +x _{ij _p}\beta _p$。相应的对 $y _{ij}$ 有假设 $\mu _{ij}=Ey _{ij}$，$\mathrm{Var}y _{ij}=a\left( \phi \right) \mathrm{Var} _{\mu _{ij}}$，并且 $\eta _{ij}$ 和 $\mu _{ij}$ 之间存在链接函数 $g(x)$ 使得 $\eta _{ij}=g\left( \mu _{ij} \right) =x _{ij}^{\mathrm{T}}\beta$。那么，估计参数 $\beta$ 就是广义估计方程中的一项重要任务。</p>
+<h2 id="2-iee">2 IEE</h2>
+<p>由于纵向数据中组内观测之间存在相关性，所以不能直接离用<a href="/2018/06/glm/">GLM</a>的结果。为了推导出GEE的参数估计的表达式，<strong>首先假设纵向数据组内也是相互独立的。</strong></p>
+<blockquote>
+<p>这么做，是先通过一个特殊的清醒理解广义估计方程，然后再将得到的方法进行一般化推广，使之可以适用于广义估计方程。</p>
+</blockquote>
+<p>另一方面，我们注意到在广义估计方程中没有分布的信息，只有均值和方差的假设。因而，极大似然法在这里不能直接使用。（没有线性关系的保证和正态分布假设，最小二乘显然也不能使用）</p>
+<p><strong>这里，我们利用拟似然的方法来求解模型。</strong> 似然方法只利用到了前二阶矩信息，那么在给定均值和方差的条件下，我们可以仿照极大似然的思路构造似然函数，这就是拟似然的思想。</p>
+<p>首先构造 $S_{ij}\left( \mu _{ij} \right) $</p>
+<p>$$
+S _{ij}\left( \mu _{ij} \right) =\frac{y _{ij}-\mu _{ij}}{\mathrm{Var}y _{ij}}=\frac{y _{ij}-\mu _{ij}}{a\left( \phi \right) \mathrm{Var} _{\mu _{ij}}}
+$$</p>
+<p>那么相应的有</p>
+<p>$$
+\theta_{ij}\left( \mu_{ij} \right) =\int_{y_{ij}}^{\mu _{ij}}{S _{ij}\left( t \right) \mathrm{d}t}
+$$</p>
+<p>接着根据上述结果得到得分函数</p>
+<p>$$
+\begin{split}
+S\left( \beta \right) &amp;=\frac{\partial \theta \left( \mu \right)}{\partial \beta} = \sum_j{\sum_j \frac{\partial \theta_{ij}}{\partial \beta}} = \sum_j{\sum_j \frac{\partial \mu_{ij}}{\partial \beta}S_{ij}}
+\newline
+&amp;= \sum_j{\sum_j \frac{\partial \mu_{ij}}{\partial \beta}\cdot \frac{y_{ij} - \mu_{ij}}{a(\phi)\mathrm{Var}\mu_{ij}}}
+\newline
+&amp;= \sum_i {D_i^T V_i^{-1}(y_i - \mu_i)}
+\end{split}
+$$</p>
+<p>其中 $D_{i}^{\mathrm{T}}=\Delta _iX_i$，这里 $X_i$ 表示第 $i$ 次的观测矩阵，$\Delta_i$ 则为对角阵</p>
+<p>$$
+\Delta _i=\left( \begin{matrix}
+\dot{h}\left( \eta _{i1} \right)&amp;		&amp;		&amp;		\newline
+&amp;		\dot{h}\left( \eta _{i2} \right)&amp;		&amp;		\newline
+&amp;		&amp;		\ddots&amp;		\newline
+&amp;		&amp;		&amp;		\dot{h}\left( \eta _{im} \right)\newline
+\end{matrix} \right) 
+$$</p>
+<h2 id="3-gee">3 GEE</h2>
+<p>根据上述求解的思想，对于GEE我们有</p>
+<p>$$
+S\left( \beta \right) =\sum_i{D_{i}^{\mathrm{T}}\left( \mathrm{Cov}y_i \right) ^{-1}\left( y_i-\mu _i \right)}
+$$</p>
+<p>其中 $\mathrm{Cov}y_i=A_{i}^{1/2}R_iA_{i}^{1/2}$。显然，$\beta$ 要计算参数 我们需要知道 $R_i$（组内相关结构），显然问题中 $R_i$ 未知，故而为了估计得以进行须给定 $R_{i0}$，称之为working correlation matrix。</p>
+<p>这样，我们令</p>
+<p>$$
+D=\left( \begin{array}{c}
+D_1\newline
+\vdots\newline
+D_n\newline
+\end{array} \right) ,
+\quad
+V=\left( \begin{matrix}
+\mathrm{Cov}y_1&amp;		&amp;		\newline
+&amp;		\ddots&amp;		\newline
+&amp;		&amp;		\mathrm{Cov}y_n\newline
+\end{matrix} \right),
+\quad
+y=\left( \begin{array}{c}
+y_1\newline
+\vdots\newline
+y_n\newline
+\end{array} \right),
+\quad
+\mu =\left( \begin{array}{c}
+\mu _1\newline
+\vdots\newline
+\mu _n\newline
+\end{array} \right) 
+$$</p>
+<p>那么 $S(\beta)$ 可以写成</p>
+<p>$$
+S\left( \beta \right) =D^{\mathrm{T}}V^{-1}\left( y-\mu \right) 
+$$</p>
+<p>则相应的加权迭代最小二乘法可以写成</p>
+<p>$$
+\beta =\left( D^{\mathrm{T}}V^{-1}D \right) ^{-1}D^{\mathrm{T}}V^{-1}\Delta \left[ \Delta ^{-1}\left( y-\mu \right) +X\beta \right] 
+$$</p>
+<h2 id="4-数据模拟">4 数据模拟</h2>
+<p>根据前面的分析可以编写求解模型的<code>R</code>代码，<strong>这些都附在最后。</strong></p>
+<p>本实验中我们考虑10个观测个体，每个个体观测100次，共有1000次观测。数据按照如下方式产生：设计矩阵 $X$ 是服从 $[0,0.1]$ 均匀分布，系数给定为 $\beta =\left( 1,3,2,4,5 \right) ^{\mathrm{T}}$，链接函数 $g(x) = \ln(x)$，组内协方差矩阵先生成 $100\times100$ 的服从 $[0,1]$ 均匀分布的矩阵，在将之和其转置相乘，取乘积的0.4倍作为组内协方差矩阵。这样，使用GEE模型，初始迭代向量取 $\left( 1.2,3.5,2.1,4.2,5.5 \right)$ 进行求解模型得到如下结果</p>
+<p><img src="/gee/gee.png" alt=""></p>
+<p>可见最终的效果还是可以的。</p>
+<h2 id="5-程序代码">5 程序代码</h2>
+<pre><code class="language-r">##This program is quasi-likelihood method
+mygee &lt;- function(x,y,beta1,v.inverse,N = 5000,e = 1e-10){#
+  # x is the design matrix
+  # b is the starting value of the iteration
+  # N is the upper bound of the times of the iteration
+  # e is the convergence criteria
+  # v.inverse is the inverse of the covariance function of y
+  
+  n &lt;- length(x)
+  x &lt;- as.matrix(x)
+  y &lt;- as.matrix(y)
+  
+  h &lt;- expression(exp(eta))# the inverse of the link funtion
+  dh &lt;- D(h,&quot;eta&quot;)# the first derivative funtion of h
+  
+  k &lt;- 1
+  beta0 &lt;- beta1 + 1
+  while(sum((beta0 - beta1)^2) &gt;= e){
+    
+    beta0 &lt;- beta1
+    
+    # compute the D matrix
+    eta &lt;- x%*%beta1
+    delta &lt;- diag(as.vector(eval(dh)))
+    D &lt;- delta%*%x
+    
+    # compute v.inverse—the inverse matrix of the covariance matrix of y
+    mu &lt;- eval(h)
+    
+    p1 &lt;- solve(t(D)%*%v.inverse%*%D)
+    p2 &lt;- t(D)%*%v.inverse%*%delta
+    p3 &lt;- x%*%beta1 + solve(delta)%*%(y - mu)
+    
+    beta1 &lt;- p1%*%p2%*%p3# the kth estimates
+    
+    # check if it is divergent
+    if(k &gt; N){
+      cat(&quot;算法不收敛，已达到最大迭代次数：&quot;,N,&quot;\n&quot;)
+      cat(&quot;此时得到的解为：&quot;,&quot;&quot;,&quot;\n&quot;)
+      print(beta1)
+      break
+    }
+    else{
+      k &lt;- k + 1
+    }
+  }
+  
+  colnames(beta1) &lt;- c(&quot;估计值&quot;)
+  rownames(beta1) &lt;- paste0(rep(&quot;系数&quot;,length(beta1)),1:length(beta1))
+  # eta &lt;- x%*%beta1
+  # y.fit &lt;- eval(h)# compute the fitting values of y
+  quasi.result &lt;- list(&quot;模型的解&quot; = beta1,&quot;算法迭代次数&quot; = k-1)
+  return(quasi.result)
+}
+</code></pre>
+
+    </div>
+    <div class="article-footer">
+<blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接: </strong>
+      <a href="https://jiandan94.github.io/blog/2018/06/gee/" title="广义估计方程简介" target="_blank" rel="external">https://jiandan94.github.io/blog/2018/06/gee/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>License：</strong><a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN</a>
+    </li>
+  </ul>
+</blockquote>
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="https://jiandan94.github.io/blog/qk.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">齐 凯</span><small class="ml-1x">统计学在读博士</small></a></h3>
+        <div>科研狗, 诗词, 书法, 烹饪</div>
+      </div>
+    </figure>
+  </div>
+</div>
+    </div>
+  </article>
+<section id="comments">
+    <div id="vcomments"></div>
+</section>
+
+</div><nav class="bar bar-footer clearfix" data-stick-bottom>
+    <div class="bar-inner">
+        <ul class="pager pull-left">
+            <li class="prev">
+                <a href="https://jiandan94.github.io/blog/2018/06/glm/" title="广义线性模型及其一般求解方式"><i
+                        class="icon icon-angle-left"
+                        aria-hidden="true"></i><span>&nbsp;&nbsp;下一篇</span></a>
+            </li>
+            <li class="next">
+                <a href="https://jiandan94.github.io/blog/2018/07/wordcloud-introduction/"
+                    title="R制作词云"><span>上一篇&nbsp;&nbsp;</span><i
+                        class="icon icon-angle-right" aria-hidden="true"></i></a>
+            </li>
+            
+            <li class="toggle-toc">
+                <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false"
+                    title="文章目录" role="button">
+                    <span>[&nbsp;</span><span>文章目录</span>
+                    <i class="text-collapsed icon icon-anchor"></i>
+                    <i class="text-in icon icon-close"></i>
+                    <span>]</span>
+                </a>
+            </li>
+        </ul>
+        <div class="bar-right">
+            <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter"
+                data-mobile-sites="weibo,qq,wechat,qzone"></div>
+        </div>
+    </div>
+</nav>
+
+</main><footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+<ul class="social-links">
+    <li><a href="mailto:qkai94@163.com" target="_blank" title="email" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-email"></i></a></li>
+    <li><a href="https://jiandan94.github.io/index.xml" target="_blank" title="rss" data-toggle=tooltip data-placement=top >
+            <i class="icon icon-rss"></i></a></li>
+</ul>
+  <div class="copyright">
+    &copy;2012  -
+    2023
+    <div class="publishby">
+        Theme by <a href="https://github.com/xiaoheiAh" target="_blank"> xiaoheiAh </a>base on<a href="https://github.com/xiaoheiAh/hugo-theme-pure" target="_blank"> pure</a>.
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+            showMathMenu: false, //disables context menu
+            tex2jax: {
+            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+           }
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+<script>
+    window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/highlight.min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/python.min.js" defer></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/javascript.min.js" defer></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/highlight.js/9.15.10/languages/r.min.js" defer></script><script>
+    hljs.configure({
+        tabReplace: '    ', 
+        classPrefix: ''     
+        
+    })
+    hljs.initHighlightingOnLoad();
+</script>
+<script src="https://jiandan94.github.io/blog/js/application.min.a94ab19cb63a95c8d7fbd7b85cab3ddeea8c369bdf75b9cab6708787ead123af.js"></script>
+<script src="https://jiandan94.github.io/blog/js/plugin.min.19c5bcb2fb0789ab4f2b7834e5ceb5e92635645605bab902c1024b25f1502364.js"></script>
+
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(未命名)',
+            },
+            ROOT_URL: 'https:\/\/jiandan94.github.io\/blog',
+            CONTENT_URL: 'https:\/\/jiandan94.github.io\/blog\/searchindex.json ',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script type="text/javascript" src="https://jiandan94.github.io/blog/js/insight.min.4a2d52de4bfff73e0c688404fe3d17c9a3ae12d9888e1e1ac9c690e4890de2ded50fe55f2b819c2ba55435a76f396f3ea6805765f0b0af5635cdf74ea459eab0.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
+<script>
+    tocbot.init({
+        
+        tocSelector: '.js-toc',
+        
+        contentSelector: '.js-toc-content',
+        
+        headingSelector: 'h1, h2, h3',
+        
+        hasInnerContainers: true,
+    });
+</script>
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://code.bdstatic.com/npm/leancloud-storage@4.12.0/dist/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine"></script>
+<script type="text/javascript">
+    var GUEST = ['nick', 'mail', 'link'];
+    var meta = 'nick,mail';
+    meta = meta.split(',').filter(function (item) {
+        return GUEST.indexOf(item) > -1;
+    });
+    new Valine({
+        el: '#vcomments',
+        verify: true ,
+        notify: true ,
+        appId: 'q0CqEA1pk8v871a9wDu65DRr-gzGzoHsz',
+        appKey: 'dfeCUT7S3cFVvUxX8cG4VEWF',
+        placeholder: '欢迎留言【填写邮箱后才能接收回复通知】',
+        avatar: 'mm',
+        meta: meta,
+        pageSize: '10' || 10,
+        visitor: false ,
+        serverURLs: 'https:\/\/q0cqea1p.lc-cn-n1-shared.com'
+});
+</script>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-174149005-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  </body>
+</html>
