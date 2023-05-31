@@ -459,7 +459,7 @@ $$
 $$
 L=e^T\alpha - \frac12\alpha^TDXX^TD\alpha
 $$
-结合约束条件可以得到SVM的<a href="https://jiandan94.gitee.io/2020/09/dual-problem/">对偶模型</a>为
+结合约束条件可以得到SVM的<a href="https://jiandan94.github.io/2020/09/dual-problem/">对偶模型</a>为
 $$
 \begin{split}
 &amp; \min \frac12\alpha^TDXX^TD\alpha - e^T\alpha\newline
@@ -475,7 +475,7 @@ $$
 <blockquote>
 <p>那些$\alpha_i&gt;0$对应的训练数据$(x_i,y_i)$“支持”着最终的分类超平面的构建，因此被称为支持向量。这便是支持向量机名称的由来。</p>
 </blockquote>
-<p>另一方面，优化SVM的过程需要满足<a href="https://jiandan94.gitee.io/2020/09/lagrangian-and-kkt/">KKT条件</a>，其中之一为
+<p>另一方面，优化SVM的过程需要满足<a href="https://jiandan94.github.io/2020/09/lagrangian-and-kkt/">KKT条件</a>，其中之一为
 $$
 \alpha_i(y_i(w^Tx_i+b)-1+\xi_i)=0
 $$
@@ -500,7 +500,7 @@ $$
 &amp; 0\leq \alpha \leq 1c
 \end{split}
 $$
-一般来说，求解出具体的映射函数形式非常困难（或者根本就无法求出），我们如何解决该问题呢？Cortes和Vapnik注意到，SVM模型优化的过程中始终是保内积运算的。因此，他们利用<a href="https://jiandan94.gitee.io/2020/09/rkhs-and-kernel/">空间映射和核函数</a>的对应关系，将高维空间的内积运算$\phi(X)\phi(X)^T$转换成核矩阵$K(X,X^T)$的计算，从而实现非线性SVM的优化！</p>
+一般来说，求解出具体的映射函数形式非常困难（或者根本就无法求出），我们如何解决该问题呢？Cortes和Vapnik注意到，SVM模型优化的过程中始终是保内积运算的。因此，他们利用<a href="https://jiandan94.github.io/2020/09/rkhs-and-kernel/">空间映射和核函数</a>的对应关系，将高维空间的内积运算$\phi(X)\phi(X)^T$转换成核矩阵$K(X,X^T)$的计算，从而实现非线性SVM的优化！</p>
 <blockquote>
 <p>核函数是一种特殊的函数，它与某个映射$\phi$的内积运算对应。映射函数难以给出，但可以根据核函数的特征来给定某种形式的核函数。由于我们不知道具体的映射，因此给定核函数是一种可行且简便的尝试。</p>
 </blockquote>

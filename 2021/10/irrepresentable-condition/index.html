@@ -372,7 +372,7 @@ $$
 Y = X\beta^* + \epsilon \qquad (1)
 $$
 其中 $Y = (y_1, \ldots, y_n)^T$​​ 是 $n \times 1$​​ 的响应变量，$X = (X_1, \ldots, X_p) = (x_1^T; \ldots; x_n^T)$​​ 是 $n\times p$​​ 的设计矩阵，这里 $X_j$​​ 是第 $j$​​ 个变量，$ x_i $​​ 是第 $i$​​ 个样本。$\beta^  *  = (\beta_1^ * , \ldots, \beta_p^ * )^T$​​ 是回归系数。$\epsilon = (\epsilon_1, \ldots, \epsilon_n)^T$​​ 均值为0、方差为 $\sigma ^ 2$​​​ 的独立同分布的随机变量。</p>
-<p>由于实际问题中数据可能包含冗余变量，利用全部变量构建的模型将会存在解释性差的问题。对此，我们需要考虑变量选择，关于这个话题可参见我<a href="https://jiandan94.gitee.io/2020/04/lasso-introduction/">先前博客</a>的相关介绍。本文主要探讨的是经典的变量选择方法——LASSO——的统计性质，即<strong>变量选择一致性</strong>。</p>
+<p>由于实际问题中数据可能包含冗余变量，利用全部变量构建的模型将会存在解释性差的问题。对此，我们需要考虑变量选择，关于这个话题可参见我<a href="https://jiandan94.github.io/2020/04/lasso-introduction/">先前博客</a>的相关介绍。本文主要探讨的是经典的变量选择方法——LASSO——的统计性质，即<strong>变量选择一致性</strong>。</p>
 <p>假设 $ \hat{\beta}^ * $ 是如下LASSO模型
 $$
 \begin{equation}
