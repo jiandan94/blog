@@ -30,8 +30,7 @@
   
   <link rel="stylesheet" href="https://jiandan94.github.io/blog/css/style.min.6d6a00921260ae2b9767148e83dbcf7fd326a53c5ab9c07f7a870d320865cc9b.css">
   
-  <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css" async> 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css" async>
+  <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/9.15.10/styles/github.min.css" async>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css" async>
   <meta property="og:title" content="非凸惩罚之SCAD简介" />
 <meta property="og:description" content="变量选择是高维统计建模中的重要内容。自1996年Tibshirani提出LASSO后，基于正则化模型的变量选择研究日益壮大、独领风潮。LAS" />
@@ -555,6 +554,7 @@ $$</p>
     </div>
   </article>
 <section id="comments">
+    <div id="vcomments"></div>
 </section>
 
 </div><nav class="bar bar-footer clearfix" data-stick-bottom>
@@ -660,20 +660,27 @@ $$</p>
 </script>
 
 <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+<script src="https://code.bdstatic.com/npm/leancloud-storage@4.12.0/dist/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine"></script>
 <script type="text/javascript">
-    var gitalk = new Gitalk({
-        clientID: '636371e0425fee36f680',
-        clientSecret: '33a0d4f0035e25cb9bcd3536131907da3d5c6158',
-        repo: 'myblog-comment',
-        owner: 'jiandan94',
-        admin: ['jiandan94'],
-        id: md5(location.pathname),
-        distractionFreeMode: true
+    var GUEST = ['nick', 'mail', 'link'];
+    var meta = 'nick,mail';
+    meta = meta.split(',').filter(function (item) {
+        return GUEST.indexOf(item) > -1;
     });
-    gitalk.render('comments');
+    new Valine({
+        el: '#vcomments',
+        verify: true ,
+        notify: true ,
+        appId: 'q0CqEA1pk8v871a9wDu65DRr-gzGzoHsz',
+        appKey: 'dfeCUT7S3cFVvUxX8cG4VEWF',
+        placeholder: '欢迎留言【填写邮箱后才能接收回复通知】',
+        avatar: 'mm',
+        meta: meta,
+        pageSize: '10' || 10,
+        visitor: false ,
+        serverURLs: 'https:\/\/q0cqea1p.lc-cn-n1-shared.com'
+});
 </script>
 
 <script type="application/javascript">
